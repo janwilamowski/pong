@@ -3,6 +3,7 @@
 import sys
 import pygame
 from pygame.locals import *
+from constants import BLACK
 from Player import Player
 from Ball import Ball
 
@@ -12,10 +13,10 @@ def run_game():
     pygame.display.set_caption('PONG')
     pygame.key.set_repeat(10, 10)
     clock = pygame.time.Clock()
-    black = (0, 0, 0)
     left_player = Player(screen, 40, 200)
     right_player = Player(screen, 580, 200)
-    ball = Ball(screen, 200, 200)
+    ball = Ball(screen, 60, 230)
+    started = False
 
     # main loop
     while True:
@@ -29,16 +30,21 @@ def run_game():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                elif event.key == K_UP:
+                elif event.key == K_SPACE:
+                    started = True
+                    ball.moving = True
+                elif event.key == K_UP and started:
                     right_player.move_up()
-                elif event.key == K_DOWN:
+                elif event.key == K_DOWN and started:
                     right_player.move_down()
-                elif event.key == K_q:
+                elif event.key == K_q and started:
                     left_player.move_up()
-                elif event.key == K_a:
+                elif event.key == K_a and started:
                     left_player.move_down()
 
-        screen.fill(black)
+        ball.step()
+
+        screen.fill(BLACK)
         right_player.display()
         left_player.display()
         ball.display()

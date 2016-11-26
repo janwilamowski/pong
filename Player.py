@@ -1,5 +1,5 @@
 import pygame
-from constants import white
+from constants import WHITE
 
 class Player():
 
@@ -16,4 +16,4 @@ class Player():
             self.pos = (self.pos[0], self.pos[1] + 2)
 
     def display(self):
-        pygame.draw.rect(self.screen, white, (self.pos[0], self.pos[1], 20, 80))
+        pygame.draw.rect(self.screen, WHITE, (self.pos[0], self.pos[1], 20, 80))

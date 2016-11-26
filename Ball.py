@@ -1,5 +1,5 @@
 import pygame
-from constants import white
+from constants import WHITE
 
 class Ball():
 
@@ -7,10 +7,22 @@ class Ball():
         self.screen = screen
         self.pos = (pos_x, pos_y)
         self.moving = False
-        self.direction = None
+        self.moving_right = True
+        self.moving_up = True
 
     def step(self):
         if not self.moving: return
 
+        if self.moving_right:
+            if self.moving_up:
+                self.pos = (self.pos[0] + 4, self.pos[1] - 4)
+            else:
+                self.pos = (self.pos[0] + 4, self.pos[1] + 4)
+        else:
+            if self.moving_up:
+                self.pos = (self.pos[0] - 4, self.pos[1] - 4)
+            else:
+                self.pos = (self.pos[0] - 4, self.pos[1] + 4)
+
     def display(self):
-        pygame.draw.rect(self.screen, white, (self.pos[0], self.pos[1], 20, 20))
+        pygame.draw.rect(self.screen, WHITE, (self.pos[0], self.pos[1], 20, 20))
