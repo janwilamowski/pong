@@ -37,12 +37,15 @@ def run_game():
                     right_player.move_up()
                 elif event.key == K_DOWN and started:
                     right_player.move_down()
+                # TODO: simultaneous input
                 elif event.key == K_q and started:
                     left_player.move_up()
                 elif event.key == K_a and started:
                     left_player.move_down()
 
         ball.step()
+        left_player.check_contact(ball)
+        right_player.check_contact(ball)
 
         screen.fill(BLACK)
         right_player.display()

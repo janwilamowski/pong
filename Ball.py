@@ -1,11 +1,12 @@
 import pygame
+from pygame import Rect
 from constants import WHITE
 
 class Ball():
 
-    def __init__(self, screen, pos_x, pos_y):
+    def __init__(self, screen, x, y):
         self.screen = screen
-        self.pos = (pos_x, pos_y)
+        self.rect = Rect(x, y, 20, 20)
         self.moving = False
         self.moving_right = True
         self.moving_up = True
@@ -15,14 +16,23 @@ class Ball():
 
         if self.moving_right:
             if self.moving_up:
-                self.pos = (self.pos[0] + 4, self.pos[1] - 4)
+                self.rect.move_ip(4, -4)
             else:
-                self.pos = (self.pos[0] + 4, self.pos[1] + 4)
+                self.rect.move_ip(4, 4)
         else:
             if self.moving_up:
-                self.pos = (self.pos[0] - 4, self.pos[1] - 4)
+                self.rect.move_ip(-4, -4)
             else:
-                self.pos = (self.pos[0] - 4, self.pos[1] + 4)
+                self.rect.move_ip(-4, 4)
+
+        if self.rect[1] < 0 or self.rect[1] > 460:
+            self.bounce_y()
+
+    def bounce_x(self):
+            self.moving_right = not self.moving_right
+
+    def bounce_y(self):
+            self.moving_up = not self.moving_up
 
     def display(self):
-        pygame.draw.rect(self.screen, WHITE, (self.pos[0], self.pos[1], 20, 20))
+        pygame.draw.rect(self.screen, WHITE, self.rect)
