@@ -22,6 +22,13 @@ def run_game():
     while True:
         clock.tick(50) # limit to 50fps
 
+        # game end
+        if started and not screen.get_rect().colliderect(ball.rect):
+            ball = Ball(screen, 60, 230)
+            left_player = Player(screen, 40, 200)
+            right_player = Player(screen, 580, 200)
+            started = False
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()

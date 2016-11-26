@@ -20,6 +20,7 @@ class Player():
         pygame.draw.rect(self.screen, WHITE, self.rect)
 
     def check_contact(self, ball):
+        # TODO: make ball bounce off top and bottom
         if self.overlaps(ball):
             ball.bounce_x()
 
