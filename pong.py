@@ -4,6 +4,7 @@ import sys
 import pygame
 from pygame.locals import *
 from Player import Player
+from Ball import Ball
 
 def run_game():
     pygame.init()
@@ -14,6 +15,7 @@ def run_game():
     black = (0, 0, 0)
     left_player = Player(screen, 40, 200)
     right_player = Player(screen, 580, 200)
+    ball = Ball(screen, 200, 200)
 
     # main loop
     while True:
@@ -39,6 +41,7 @@ def run_game():
         screen.fill(black)
         right_player.display()
         left_player.display()
+        ball.display()
 
         pygame.display.update() # flip?
 

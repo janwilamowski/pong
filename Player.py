@@ -1,6 +1,5 @@
 import pygame
-
-white = (255, 255, 255)
+from constants import white
 
 class Player():
 
