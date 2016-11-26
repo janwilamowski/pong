@@ -43,22 +43,22 @@ def run_game():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-                elif event.key == K_SPACE:
-                    started = True
-                    ball.moving = True
-                elif event.key == K_UP and started:
-                    right_player.move_up()
-                elif event.key == K_DOWN and started:
-                    right_player.move_down()
-                # TODO: simultaneous input
-                elif event.key == K_q and started:
-                    left_player.move_up()
-                elif event.key == K_a and started:
-                    left_player.move_down()
+
+        keys = pygame.key.get_pressed()
+        if keys[K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
+        if keys[K_SPACE] and not started:
+            started = True
+            ball.moving = True
+        if keys[K_UP] and started:
+            right_player.move_up()
+        if keys[K_DOWN] and started:
+            right_player.move_down()
+        if keys[K_q] and started:
+            left_player.move_up()
+        if keys[K_a] and started:
+            left_player.move_down()
 
         screen.fill(BLACK)
 
