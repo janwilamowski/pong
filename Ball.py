@@ -25,7 +25,7 @@ class Ball():
             else:
                 self.rect.move_ip(-4, 4)
 
-        if self.rect[1] < 0 or self.rect[1] > 460:
+        if self.rect.y < 0 or self.rect.y > 460:
             self.bounce_y()
 
     def bounce_x(self):

@@ -77,7 +77,7 @@ def run_game():
         left_player.display()
         ball.display()
 
-        pygame.display.update() # flip?
+        pygame.display.flip()
 
 if __name__ == '__main__':
     run_game()
