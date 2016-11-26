@@ -8,11 +8,11 @@ class Player():
         self.screen = screen
         self.rect = Rect(x, y, 20, 80)
 
-    def move_up(self, step = 2):
+    def move_up(self):
         if self.rect[1] > 0:
             self.rect.move_ip(0, -2)
 
-    def move_down(self, step = 2):
+    def move_down(self):
         if self.rect[1] < 400:
             self.rect.move_ip(0, 2)
 
