@@ -3,6 +3,7 @@
 import sys
 import pygame
 from pygame.locals import *
+from Player import Player
 
 def run_game():
     pygame.init()
@@ -11,9 +12,8 @@ def run_game():
     pygame.key.set_repeat(10, 10)
     clock = pygame.time.Clock()
     black = (0, 0, 0)
-    white = (255, 255, 255)
-    left_pos = (40, 200)
-    right_pos = (580, 200)
+    left_player = Player(screen, 40, 200)
+    right_player = Player(screen, 580, 200)
 
     # main loop
     while True:
@@ -27,18 +27,19 @@ def run_game():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-                elif event.key == K_UP and right_pos[1] > 0:
-                    right_pos = (580, right_pos[1] - 2)
-                elif event.key == K_DOWN and right_pos[1] < 400:
-                    right_pos = (580, right_pos[1] + 2)
-                elif event.key == K_q and left_pos[1] < 400:
-                    left_pos = (40, left_pos[1] - 2)
-                elif event.key == K_a and left_pos[1] < 400:
-                    left_pos = (40, left_pos[1] + 2)
+                elif event.key == K_UP:
+                    right_player.move_up()
+                elif event.key == K_DOWN:
+                    right_player.move_down()
+                elif event.key == K_q:
+                    left_player.move_up()
+                elif event.key == K_a:
+                    left_player.move_down()
 
         screen.fill(black)
-        pygame.draw.rect(screen, white, (left_pos[0], left_pos[1], 20, 80))
-        pygame.draw.rect(screen, white, (right_pos[0], right_pos[1], 20, 80))
+        right_player.display()
+        left_player.display()
+
         pygame.display.update() # flip?
 
 if __name__ == '__main__':
