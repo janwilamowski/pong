@@ -5,11 +5,12 @@
 ## Usage
 
 ```text
-./pong.py [ai]  or  python pong.py
+./pong.py [ai] [nosound]
 
 Options:
 
     - ai: left player is controlled by the computer (default: off)
+    - nosound: don't play any sounds
 ```
 
 ## Controls

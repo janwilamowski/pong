@@ -14,6 +14,9 @@ class Ball():
         self.speed = speed
         self.angle = math.pi * abs(angle)/180
 
+    def is_offscreen(self):
+        return not self.screen.get_rect().colliderect(self.rect)
+
     def step(self):
         if not self.moving: return
 

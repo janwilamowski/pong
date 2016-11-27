@@ -12,7 +12,9 @@ class Game():
     def __init__(self, args):
         random.seed()
         pygame.init()
-        self.use_ai = len(args) > 0 and args[0] == 'ai'
+        self.use_ai = 'ai' in args
+        no_sound = 'nosound' in args
+        self.setup_sounds(no_sound)
         self.init()
 
     def init(self):
@@ -27,6 +29,21 @@ class Game():
         angle *= random.choice([-1, 1])
         self.ball = Ball(self.screen, 60, 230, self.speed, angle)
 
+    def setup_sounds(self, no_sound):
+        if no_sound:
+            self.sounds = {}
+            return
+
+        self.sounds = {
+            'blip': pygame.mixer.Sound('sfx/blip5.wav'),
+            'blop': pygame.mixer.Sound('sfx/blip4.wav'),
+            'gameover': pygame.mixer.Sound('sfx/gameover.wav')
+        }
+
+    def play(self, sound):
+        if sound in self.sounds:
+            self.sounds[sound].play()
+
     def run(self):
         # globals
         pygame.display.set_caption('PONG')
@@ -38,17 +55,14 @@ class Game():
         left_score_pos = pygame.Rect(260, 230, 50, 30)
         right_score_pos = pygame.Rect(410, 230, 50, 30)
 
-        blip = pygame.mixer.Sound('sfx/blip5.wav')
-        blop = pygame.mixer.Sound('sfx/blip4.wav')
-        gameover = pygame.mixer.Sound('sfx/gameover.wav')
 
         # main loop
         while True:
             clock.tick(50) # limit to 50fps
 
             # game end
-            if self.started and not self.screen.get_rect().colliderect(self.ball.rect):
-                gameover.play()
+            if self.started and self.ball.is_offscreen():
+                self.play('gameover')
                 if self.ball.rect.x < 0:
                     right_score += 1
                 else:
@@ -67,7 +81,7 @@ class Game():
             if keys[K_SPACE] and not self.started:
                 self.started = True
                 self.ball.moving = True
-                blop.play()
+                self.play('blop')
             if keys[K_UP] and self.started:
                 self.right_player.move_up()
             if keys[K_DOWN] and self.started:
@@ -81,10 +95,11 @@ class Game():
 
             if self.started:
                 if self.ball.step():
-                    blip.play()
-                if self.left_player.check_contact(self.ball) or self.right_player.check_contact(self.ball):
+                    self.play('blip')
+                if self.left_player.check_contact(self.ball) \
+                        or self.right_player.check_contact(self.ball):
                     self.bounces += 1
-                    blop.play()
+                    self.play('blop')
                 # increase speed
                 if self.bounces > 5:
                     self.speed += 1
