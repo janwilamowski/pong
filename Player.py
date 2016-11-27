@@ -6,8 +6,6 @@ class Player():
 
     def __init__(self, screen, x, y):
         self.screen = screen
-        self.initial_x = x
-        self.initial_y = y
         self.rect = Rect(x, y, 20, 80)
 
     def move_up(self):
@@ -17,10 +15,6 @@ class Player():
     def move_down(self):
         if self.rect.y < 400:
             self.rect.move_ip(0, 4)
-
-    def reset_pos(self):
-        self.rect.x = self.initial_x
-        self.rect.y = self.initial_y
 
     def display(self):
         pygame.draw.rect(self.screen, WHITE, self.rect)

@@ -10,7 +10,7 @@
 Options:
 
     - ai: left player is controlled by the computer (default: off)
-    - nosound: don't play any sounds
+    - nosound: don't play any sounds (default: off)
 ```
 
 ## Controls
