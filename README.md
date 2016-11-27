@@ -21,6 +21,7 @@ Options:
 - End: Escape
 - F3: switch AI on/off
 - F4: switch sound on/off
+- F5: take screenshot
 
 ## Requirements
 

@@ -14,6 +14,7 @@ class Game():
         pygame.init()
         self.use_ai = 'ai' in args
         self.no_sound = 'nosound' in args
+        self.screenshot_counter = 0
         self.setup_sounds()
         self.init()
 
@@ -39,6 +40,11 @@ class Game():
     def play(self, sound):
         if not self.no_sound and sound in self.sounds:
             self.sounds[sound].play()
+
+    def screenshot(self):
+        filename = "screenshot{c}.jpg".format(c=self.screenshot_counter)
+        self.screenshot_counter += 1
+        pygame.image.save(self.screen, filename)
 
     def run(self):
         # globals
@@ -79,6 +85,8 @@ class Game():
                         self.use_ai = not self.use_ai
                     if event.key == K_F4:
                         self.no_sound = not self.no_sound
+                    if event.key == K_F5:
+                        self.screenshot()
 
             keys = pygame.key.get_pressed()
             if keys[K_ESCAPE]:
