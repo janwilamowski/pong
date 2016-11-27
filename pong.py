@@ -13,8 +13,8 @@ class Game():
         random.seed()
         pygame.init()
         self.use_ai = 'ai' in args
-        no_sound = 'nosound' in args
-        self.setup_sounds(no_sound)
+        self.no_sound = 'nosound' in args
+        self.setup_sounds()
         self.init()
 
     def init(self):
@@ -29,11 +29,7 @@ class Game():
         angle *= random.choice([-1, 1])
         self.ball = Ball(self.screen, 60, 230, self.speed, angle)
 
-    def setup_sounds(self, no_sound):
-        if no_sound:
-            self.sounds = {}
-            return
-
+    def setup_sounds(self):
         self.sounds = {
             'blip': pygame.mixer.Sound('sfx/blip5.wav'),
             'blop': pygame.mixer.Sound('sfx/blip4.wav'),
@@ -41,7 +37,7 @@ class Game():
         }
 
     def play(self, sound):
-        if sound in self.sounds:
+        if not self.no_sound and sound in self.sounds:
             self.sounds[sound].play()
 
     def run(self):
@@ -73,11 +69,16 @@ class Game():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == KEYUP and event.key == K_SPACE:
-                    if not self.started:
-                        self.play('blop')
-                    self.started = not self.started
-                    self.ball.moving = not self.ball.moving
+                elif event.type == KEYUP:
+                    if event.key == K_SPACE:
+                        if not self.started:
+                            self.play('blop')
+                        self.started = not self.started
+                        self.ball.moving = not self.ball.moving
+                    if event.key == K_F3:
+                        self.use_ai = not self.use_ai
+                    if event.key == K_F4:
+                        self.no_sound = not self.no_sound
 
             keys = pygame.key.get_pressed()
             if keys[K_ESCAPE]:
