@@ -20,10 +20,29 @@ class Player():
         pygame.draw.rect(self.screen, WHITE, self.rect)
 
     def check_contact(self, ball):
-        # TODO: make ball bounce off top and bottom
-        if self.overlaps(ball):
+        if not self.overlaps(ball):
+            return False
+
+        if ball.moving_right:
+            x_diff = abs(ball.rect.right - self.rect.left)
+        else:
+            x_diff = abs(ball.rect.left - self.rect.right)
+
+        if ball.moving_up:
+            y_diff = abs(ball.rect.top - self.rect.bottom)
+        else:
+            y_diff = abs(ball.rect.bottom - self.rect.top)
+
+        if x_diff < y_diff and ball.rect.x:
             ball.bounce_x()
-            return True
+        elif x_diff > y_diff:
+            ball.bounce_y()
+        else:
+            # corner bounce
+            ball.bounce_x()
+            ball.bounce_y()
+
+        return True
 
     def overlaps(self, other):
         return self.rect.colliderect(other.rect)
