@@ -25,6 +25,9 @@ def run_game(args):
     started = False
     bounces = 0
     use_ai = len(args) > 0 and args[0] == 'ai'
+    blip = pygame.mixer.Sound('sfx/blip5.wav')
+    blop = pygame.mixer.Sound('sfx/blip4.wav')
+    gameover = pygame.mixer.Sound('sfx/gameover.wav')
 
     # main loop
     while True:
@@ -32,6 +35,7 @@ def run_game(args):
 
         # game end
         if started and not screen.get_rect().colliderect(ball.rect):
+            gameover.play()
             if ball.rect.x < 0:
                 right_score += 1
             else:
@@ -55,6 +59,7 @@ def run_game(args):
         if keys[K_SPACE] and not started:
             started = True
             ball.moving = True
+            blop.play()
         if keys[K_UP] and started:
             right_player.move_up()
         if keys[K_DOWN] and started:
@@ -67,9 +72,11 @@ def run_game(args):
         screen.fill(BLACK)
 
         if started:
-            ball.step()
+            if ball.step():
+                blip.play()
             if left_player.check_contact(ball) or right_player.check_contact(ball):
                 bounces += 1
+                blop.play()
             # increase speed
             if bounces > 5:
                 speed += 1

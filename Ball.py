@@ -28,6 +28,9 @@ class Ball():
 
         if self.rect.y < 0 or self.rect.y > 460:
             self.bounce_y()
+            return True
+
+        return False
 
     def bounce_x(self):
             self.moving_right = not self.moving_right
