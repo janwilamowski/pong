@@ -23,6 +23,7 @@ class Player():
         # TODO: make ball bounce off top and bottom
         if self.overlaps(ball):
             ball.bounce_x()
+            return True
 
     def overlaps(self, other):
         return self.rect.colliderect(other.rect)

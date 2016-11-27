@@ -17,11 +17,13 @@ def run_game(args):
 
     left_player = Player(screen, 40, 200)
     right_player = Player(screen, 580, 200)
-    ball = Ball(screen, 60, 230)
+    speed = 4
+    ball = Ball(screen, 60, 230, speed)
     left_score = right_score = 0
     left_score_pos = pygame.Rect(260, 230, 50, 30)
     right_score_pos = pygame.Rect(410, 230, 50, 30)
     started = False
+    bounces = 0
     use_ai = len(args) > 0 and args[0] == 'ai'
 
     # main loop
@@ -38,6 +40,7 @@ def run_game(args):
             ball = Ball(screen, 60, 230)
             left_player = Player(screen, 40, 200)
             right_player = Player(screen, 580, 200)
+            speed = 4
             started = False
 
         for event in pygame.event.get():
@@ -65,8 +68,13 @@ def run_game(args):
 
         if started:
             ball.step()
-            left_player.check_contact(ball)
-            right_player.check_contact(ball)
+            if left_player.check_contact(ball) or right_player.check_contact(ball):
+                bounces += 1
+            # increase speed
+            if bounces > 5:
+                speed += 1
+                ball.speed = speed
+                bounces = 0
             if use_ai:
                 left_player.ai_move(ball)
         else:
