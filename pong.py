@@ -6,96 +6,105 @@ from pygame.locals import *
 from constants import BLACK, WHITE
 from Player import Player
 from Ball import Ball
+import random
 
-def run_game(args):
-    pygame.init()
-    screen = pygame.display.set_mode((640, 480))
-    pygame.display.set_caption('PONG')
-    pygame.key.set_repeat(10, 10)
-    clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 36)
+class Game():
+    def __init__(self, args):
+        random.seed()
+        pygame.init()
+        self.use_ai = len(args) > 0 and args[0] == 'ai'
+        self.init()
 
-    left_player = Player(screen, 40, 200)
-    right_player = Player(screen, 580, 200)
-    speed = 4
-    ball = Ball(screen, 60, 230, speed)
-    left_score = right_score = 0
-    left_score_pos = pygame.Rect(260, 230, 50, 30)
-    right_score_pos = pygame.Rect(410, 230, 50, 30)
-    started = False
-    bounces = 0
-    use_ai = len(args) > 0 and args[0] == 'ai'
-    blip = pygame.mixer.Sound('sfx/blip5.wav')
-    blop = pygame.mixer.Sound('sfx/blip4.wav')
-    gameover = pygame.mixer.Sound('sfx/gameover.wav')
+    def init(self):
+        # game state
+        self.started = False
+        self.screen = pygame.display.set_mode((640, 480))
+        self.left_player = Player(self.screen, 40, 200)
+        self.right_player = Player(self.screen, 580, 200)
+        self.speed = 6
+        self.bounces = 0
+        angle = random.randint(30, 60)
+        angle *= random.choice([-1, 1])
+        self.ball = Ball(self.screen, 60, 230, self.speed, angle)
 
-    # main loop
-    while True:
-        clock.tick(50) # limit to 50fps
+    def run(self):
+        # globals
+        pygame.display.set_caption('PONG')
+        pygame.key.set_repeat(10, 10)
+        clock = pygame.time.Clock()
+        font = pygame.font.Font(None, 36)
 
-        # game end
-        if started and not screen.get_rect().colliderect(ball.rect):
-            gameover.play()
-            if ball.rect.x < 0:
-                right_score += 1
-            else:
-                left_score += 1
+        left_score = right_score = 0
+        left_score_pos = pygame.Rect(260, 230, 50, 30)
+        right_score_pos = pygame.Rect(410, 230, 50, 30)
 
-            ball = Ball(screen, 60, 230)
-            left_player = Player(screen, 40, 200)
-            right_player = Player(screen, 580, 200)
-            speed = 4
-            started = False
+        blip = pygame.mixer.Sound('sfx/blip5.wav')
+        blop = pygame.mixer.Sound('sfx/blip4.wav')
+        gameover = pygame.mixer.Sound('sfx/gameover.wav')
 
-        for event in pygame.event.get():
-            if event.type == QUIT:
+        # main loop
+        while True:
+            clock.tick(50) # limit to 50fps
+
+            # game end
+            if self.started and not self.screen.get_rect().colliderect(self.ball.rect):
+                gameover.play()
+                if self.ball.rect.x < 0:
+                    right_score += 1
+                else:
+                    left_score += 1
+                self.init()
+
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            keys = pygame.key.get_pressed()
+            if keys[K_ESCAPE]:
                 pygame.quit()
                 sys.exit()
-
-        keys = pygame.key.get_pressed()
-        if keys[K_ESCAPE]:
-            pygame.quit()
-            sys.exit()
-        if keys[K_SPACE] and not started:
-            started = True
-            ball.moving = True
-            blop.play()
-        if keys[K_UP] and started:
-            right_player.move_up()
-        if keys[K_DOWN] and started:
-            right_player.move_down()
-        if keys[K_q] and started and not use_ai:
-            left_player.move_up()
-        if keys[K_a] and started and not use_ai:
-            left_player.move_down()
-
-        screen.fill(BLACK)
-
-        if started:
-            if ball.step():
-                blip.play()
-            if left_player.check_contact(ball) or right_player.check_contact(ball):
-                bounces += 1
+            if keys[K_SPACE] and not self.started:
+                self.started = True
+                self.ball.moving = True
                 blop.play()
-            # increase speed
-            if bounces > 5:
-                speed += 1
-                ball.speed = speed
-                bounces = 0
-            if use_ai:
-                left_player.ai_move(ball)
-        else:
-            # show score
-            left_score_text = font.render(str(left_score), 1, WHITE)
-            screen.blit(left_score_text, left_score_pos)
-            right_score_text = font.render(str(right_score), 1, WHITE)
-            screen.blit(right_score_text, right_score_pos)
+            if keys[K_UP] and self.started:
+                self.right_player.move_up()
+            if keys[K_DOWN] and self.started:
+                self.right_player.move_down()
+            if keys[K_q] and self.started and not self.use_ai:
+                self.left_player.move_up()
+            if keys[K_a] and self.started and not self.use_ai:
+                self.left_player.move_down()
 
-        right_player.display()
-        left_player.display()
-        ball.display()
+            self.screen.fill(BLACK)
 
-        pygame.display.flip()
+            if self.started:
+                if self.ball.step():
+                    blip.play()
+                if self.left_player.check_contact(self.ball) or self.right_player.check_contact(self.ball):
+                    self.bounces += 1
+                    blop.play()
+                # increase speed
+                if self.bounces > 5:
+                    self.speed += 1
+                    self.ball.speed = self.speed
+                    self.bounces = 0
+                if self.use_ai:
+                    self.left_player.ai_move(self.ball)
+            else:
+                # show score
+                left_score_text = font.render(str(left_score), 1, WHITE)
+                self.screen.blit(left_score_text, left_score_pos)
+                right_score_text = font.render(str(right_score), 1, WHITE)
+                self.screen.blit(right_score_text, right_score_pos)
+
+            self.right_player.display()
+            self.left_player.display()
+            self.ball.display()
+
+            pygame.display.flip()
 
 if __name__ == '__main__':
-    run_game(sys.argv[1:])
+    game = Game(sys.argv[1:])
+    game.run()

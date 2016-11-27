@@ -6,6 +6,8 @@ class Player():
 
     def __init__(self, screen, x, y):
         self.screen = screen
+        self.initial_x = x
+        self.initial_y = y
         self.rect = Rect(x, y, 20, 80)
 
     def move_up(self):
@@ -16,10 +18,22 @@ class Player():
         if self.rect.y < 400:
             self.rect.move_ip(0, 4)
 
+    def reset_pos(self):
+        self.rect.x = self.initial_x
+        self.rect.y = self.initial_y
+
     def display(self):
         pygame.draw.rect(self.screen, WHITE, self.rect)
 
     def check_contact(self, ball):
+        """
+        Checks whether this player has contact with the given ball. If so, will bounce the ball
+        in the appropriate direction.
+
+        Uses PyGame's overlap functionality which is convenient but somewhat imprecise.
+
+        @return bool whether there's a contact between player and ball
+        """
         if not self.overlaps(ball):
             return False
 

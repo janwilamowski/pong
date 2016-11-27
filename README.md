@@ -23,3 +23,11 @@ Options:
 
 - Python 2.x
 - PyGame
+
+## Licensing
+
+![CC-BY-SA](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)
+
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+
+Sounds by [NoiseCollector](https://freesound.org/people/NoiseCollector/) and [n_audioman](https://freesound.org/people/n_audioman/).
