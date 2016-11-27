@@ -7,7 +7,7 @@ from constants import BLACK, WHITE
 from Player import Player
 from Ball import Ball
 
-def run_game():
+def run_game(args):
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
     pygame.display.set_caption('PONG')
@@ -22,6 +22,7 @@ def run_game():
     left_score_pos = pygame.Rect(260, 230, 50, 30)
     right_score_pos = pygame.Rect(410, 230, 50, 30)
     started = False
+    use_ai = len(args) > 0 and args[0] == 'ai'
 
     # main loop
     while True:
@@ -55,9 +56,9 @@ def run_game():
             right_player.move_up()
         if keys[K_DOWN] and started:
             right_player.move_down()
-        if keys[K_q] and started:
+        if keys[K_q] and started and not use_ai:
             left_player.move_up()
-        if keys[K_a] and started:
+        if keys[K_a] and started and not use_ai:
             left_player.move_down()
 
         screen.fill(BLACK)
@@ -66,6 +67,8 @@ def run_game():
             ball.step()
             left_player.check_contact(ball)
             right_player.check_contact(ball)
+            if use_ai:
+                left_player.ai_move(ball)
         else:
             # show score
             left_score_text = font.render(str(left_score), 1, WHITE)
@@ -80,4 +83,4 @@ def run_game():
         pygame.display.flip()
 
 if __name__ == '__main__':
-    run_game()
+    run_game(sys.argv[1:])
