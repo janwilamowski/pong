@@ -73,15 +73,16 @@ class Game():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == KEYUP and event.key == K_SPACE:
+                    if not self.started:
+                        self.play('blop')
+                    self.started = not self.started
+                    self.ball.moving = not self.ball.moving
 
             keys = pygame.key.get_pressed()
             if keys[K_ESCAPE]:
                 pygame.quit()
                 sys.exit()
-            if keys[K_SPACE] and not self.started:
-                self.started = True
-                self.ball.moving = True
-                self.play('blop')
             if keys[K_UP] and self.started:
                 self.right_player.move_up()
             if keys[K_DOWN] and self.started:
