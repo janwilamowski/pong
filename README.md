@@ -19,6 +19,7 @@ Options:
 - Left player: Q/A keys (if AI is off)
 - Start & Pause: Space
 - End: Escape
+- F1: show help
 - F3: switch AI on/off
 - F4: switch sound on/off
 - F5: take screenshot
