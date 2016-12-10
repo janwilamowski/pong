@@ -7,6 +7,10 @@ from constants import BLACK, WHITE
 from Player import Player
 from Ball import Ball
 import random
+import os
+import module_locator
+
+base_dir = module_locator.module_path()
 
 class Game():
     def __init__(self, args):
@@ -32,9 +36,9 @@ class Game():
 
     def setup_sounds(self):
         self.sounds = {
-            'blip': pygame.mixer.Sound('sfx/blip5.wav'),
-            'blop': pygame.mixer.Sound('sfx/blip4.wav'),
-            'gameover': pygame.mixer.Sound('sfx/gameover.wav')
+            'blip': pygame.mixer.Sound(os.path.join(base_dir, 'sfx', 'blip5.wav')),
+            'blop': pygame.mixer.Sound(os.path.join(base_dir, 'sfx', 'blip4.wav')),
+            'gameover': pygame.mixer.Sound(os.path.join(base_dir, 'sfx', 'gameover.wav'))
         }
 
     def play(self, sound):
@@ -44,14 +48,15 @@ class Game():
     def screenshot(self):
         filename = "screenshot{c}.jpg".format(c=self.screenshot_counter)
         self.screenshot_counter += 1
-        pygame.image.save(self.screen, filename)
+        pygame.image.save(self.screen, os.path.join(base_dir, filename))
 
     def run(self):
         # globals
         pygame.display.set_caption('PONG')
         pygame.key.set_repeat(10, 10)
         clock = pygame.time.Clock()
-        font = pygame.font.Font('fonts/DejaVuSans.ttf', 36)
+        font_file = os.path.join(base_dir, 'fonts', 'DejaVuSans.ttf')
+        font = pygame.font.Font(font_file, 36)
 
         left_score = right_score = 0
         left_score_pos = pygame.Rect(260, 230, 50, 30)
