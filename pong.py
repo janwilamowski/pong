@@ -55,13 +55,41 @@ class Game():
         pygame.display.set_caption('PONG')
         pygame.key.set_repeat(10, 10)
         clock = pygame.time.Clock()
-        font_file = os.path.join(base_dir, 'fonts', 'DejaVuSans.ttf')
-        font = pygame.font.Font(font_file, 36)
+        font_file = os.path.join(base_dir, 'fonts', 'DejaVuSansMono.ttf')
+        small_font = pygame.font.Font(font_file, 16)
+        big_font = pygame.font.Font(font_file, 36)
 
         left_score = right_score = 0
         left_score_pos = pygame.Rect(260, 230, 50, 30)
         right_score_pos = pygame.Rect(410, 230, 50, 30)
 
+        help_text = []
+        with open(os.path.join(base_dir, 'help.txt'), 'r') as help_file:
+            for line in help_file:
+                help_text.append(line[:-1])
+        show_help = False
+
+        def pause():
+            if not self.started:
+                self.play('blop')
+            self.started = not self.started
+            self.ball.moving = not self.ball.moving
+
+        def unpause():
+            pause()
+
+        def display_score():
+            left_score_text = big_font.render(str(left_score), 1, WHITE)
+            self.screen.blit(left_score_text, left_score_pos)
+            right_score_text = big_font.render(str(right_score), 1, WHITE)
+            self.screen.blit(right_score_text, right_score_pos)
+
+        def display_help():
+            help_text_pos = pygame.Rect(200, 100, 540, 380)
+            for line in help_text:
+                help_line = small_font.render(line, 1, WHITE)
+                self.screen.blit(help_line, help_text_pos)
+                help_text_pos.move_ip(0, 20)
 
         # main loop
         while True:
@@ -81,11 +109,15 @@ class Game():
                     pygame.quit()
                     sys.exit()
                 elif event.type == KEYUP:
+                    if show_help:
+                        show_help = False
+                        unpause()
+                        continue
                     if event.key == K_SPACE:
-                        if not self.started:
-                            self.play('blop')
-                        self.started = not self.started
-                        self.ball.moving = not self.ball.moving
+                        pause()
+                    if event.key == K_F1 and self.started:
+                        show_help = not show_help
+                        pause()
                     if event.key == K_F3:
                         self.use_ai = not self.use_ai
                     if event.key == K_F4:
@@ -122,16 +154,15 @@ class Game():
                     self.bounces = 0
                 if self.use_ai:
                     self.left_player.ai_move(self.ball)
+            elif show_help:
+                display_help()
             else:
-                # show score
-                left_score_text = font.render(str(left_score), 1, WHITE)
-                self.screen.blit(left_score_text, left_score_pos)
-                right_score_text = font.render(str(right_score), 1, WHITE)
-                self.screen.blit(right_score_text, right_score_pos)
+                display_score()
 
             self.right_player.display()
             self.left_player.display()
-            self.ball.display()
+            if not show_help:
+                self.ball.display()
 
             pygame.display.flip()
 

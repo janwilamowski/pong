@@ -1,0 +1,13 @@
+          PONG
+
+Right Player      Up/Down
+Left Player           Q/A
+Start & Pause       Space
+Quit               Escape
+Show help              F1
+Switch AI on/off       F3
+Switch sound on/off    F4
+Take screenshot        F5
+
+
+       janw, 2016
