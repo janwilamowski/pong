@@ -51,7 +51,7 @@ class Game():
         pygame.display.set_caption('PONG')
         pygame.key.set_repeat(10, 10)
         clock = pygame.time.Clock()
-        font = pygame.font.Font(None, 36)
+        font = pygame.font.Font('fonts/DejaVuSans.ttf', 36)
 
         left_score = right_score = 0
         left_score_pos = pygame.Rect(260, 230, 50, 30)
