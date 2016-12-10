@@ -23,6 +23,10 @@ Options:
 - F4: switch sound on/off
 - F5: take screenshot
 
+## Download
+
+Find and download the directory for your system in the [dist folder](./dist/). It contains an executable and all required resources.
+
 ## Requirements
 
 - Python 2.x
