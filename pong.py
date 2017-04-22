@@ -111,13 +111,15 @@ class Game():
                 elif event.type == KEYUP:
                     if show_help:
                         show_help = False
-                        unpause()
+                        if self.started:
+                            unpause()
                         continue
                     if event.key == K_SPACE:
                         pause()
-                    if event.key == K_F1 and self.started:
+                    if event.key == K_F1:
                         show_help = not show_help
-                        pause()
+                        if self.started:
+                            pause()
                     if event.key == K_F3:
                         self.use_ai = not self.use_ai
                     if event.key == K_F4:

@@ -1,4 +1,4 @@
-          PONG
+           PONG
 
 Right Player      Up/Down
 Left Player           Q/A
@@ -10,4 +10,4 @@ Switch sound on/off    F4
 Take screenshot        F5
 
 
-       janw, 2016
+        janw, 2016
