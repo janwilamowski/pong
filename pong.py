@@ -11,6 +11,7 @@ import os
 import module_locator
 
 base_dir = module_locator.module_path()
+STATUS_FADE = USEREVENT + 1
 
 class Game():
     def __init__(self, args):
@@ -20,9 +21,11 @@ class Game():
         self.no_sound = 'nosound' in args
         self.screenshot_counter = 0
         self.setup_sounds()
-        self.init()
+        self.status_msg = ''
+        self.status_level = 0
+        self.reset()
 
-    def init(self):
+    def reset(self):
         # game state
         self.started = False
         self.screen = pygame.display.set_mode((640, 480))
@@ -62,6 +65,7 @@ class Game():
         left_score = right_score = 0
         left_score_pos = pygame.Rect(260, 230, 50, 30)
         right_score_pos = pygame.Rect(410, 230, 50, 30)
+        status_pos = pygame.Rect(0, 460, 200, 20)
 
         help_text = []
         with open(os.path.join(base_dir, 'help.txt'), 'r') as help_file:
@@ -91,6 +95,20 @@ class Game():
                 self.screen.blit(help_line, help_text_pos)
                 help_text_pos.move_ip(0, 20)
 
+        def show_status(text, display_time=200):
+            self.status_msg = text
+            self.status_level = 1
+            pygame.time.set_timer(STATUS_FADE, display_time)
+
+        def display_status():
+            if len(self.status_msg) == 0 or self.status_level <= 0: return
+
+            status_color = tuple(int(color * self.status_level) for color in WHITE)
+            status_text = small_font.render(str(self.status_msg), 1, status_color)
+            self.screen.blit(status_text, status_pos)
+
+        show_status('Press <Space> to start game.', 1000)
+
         # main loop
         while True:
             clock.tick(50) # limit to 50fps
@@ -100,11 +118,20 @@ class Game():
                 self.play('gameover')
                 if self.ball.rect.x < 0:
                     right_score += 1
+                    show_status('Right Player scores!')
                 else:
                     left_score += 1
-                self.init()
+                    show_status('Left Player scores!')
+                self.reset()
 
             for event in pygame.event.get():
+                if event.type == STATUS_FADE:
+                    if self.status_level > 0:
+                        # one second fade-out
+                        self.status_level -= 0.04
+                        pygame.time.set_timer(STATUS_FADE, 20)
+                    else:
+                        pygame.time.set_timer(STATUS_FADE, 0)
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
@@ -122,8 +149,10 @@ class Game():
                             pause()
                     if event.key == K_F3:
                         self.use_ai = not self.use_ai
+                        show_status("AI {onoff}".format(onoff=('on' if self.use_ai else 'off')))
                     if event.key == K_F4:
                         self.no_sound = not self.no_sound
+                        show_status("sound {onoff}".format(onoff=('off' if self.no_sound else 'on')))
                     if event.key == K_F5:
                         self.screenshot()
 
@@ -165,6 +194,7 @@ class Game():
             self.left_player.display()
             if not show_help:
                 self.ball.display()
+            display_status()
 
             pygame.display.flip()
 
