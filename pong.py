@@ -107,7 +107,7 @@ class Game():
             status_text = small_font.render(str(self.status_msg), 1, status_color)
             self.screen.blit(status_text, status_pos)
 
-        show_status('Press <Space> to start game.', 1000)
+        show_status('Press <Space> to start game and <F1> for help.', 2000)
 
         # main loop
         while True:
