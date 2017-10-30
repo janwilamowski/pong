@@ -23,6 +23,8 @@ class Game():
         self.setup_sounds()
         self.status_msg = ''
         self.status_level = 0
+        icon = pygame.image.load(os.path.join(base_dir, 'screenshot.png'))
+        pygame.display.set_icon(icon)
         self.reset()
 
     def reset(self):
